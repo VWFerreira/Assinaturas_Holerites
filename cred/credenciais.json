@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "assinaturas-455200",
+  "private_key_id": "d6322eb11529a2f76b04d40c8bd9db10b0cd9a94",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDMjMQBGW+3irFq\nI5mjfz5y+GGolNDGk2g4429rLnUBw10aRAMUraYCEOiurHIdKF4pTnS7l5Ps9HCn\nvXmSIWMLYgqj0QrIsbwefRscZvb4L2WlqtBbi9Rj5Sp9yMbtJ8vjYLeANIXSBBEz\nbIJDufzXjvg3Yxdmv9WjxYXbpiufNyTPaBtJGFKQ9DzausjeYyBzJG+HR9PexL3e\nC4tut3B2svm4LENT9G69iBx9o79eXsTdzGE4/J1KeMF+dfu1GClXzW91AN5wqpvz\nXP54oeA4qKKvOkarwRPsusRpHrJsIeQzaj8fFa283jeEzx/cmoq7GmyV+JG7N535\nppFr1h31AgMBAAECggEAAkV65Lc7WBqsay0PhvMCBsVO0lAqvFXFNcKCyXon1vfs\nJ/9C2H8wJXw6FTx5fOzmlMdYAQBHJn21ZYtzVuXTg3wYeaa327ArklwZybgz/GAM\nXSlXLHkSR/SywthQqzACsdjwWLZcmQ8uALfu/2EIl30xMO5DA4NUVD/8g0qmV9uA\nEIqn/zr8vlq+vUJGO3AzpOwr+g3cPsP3knezSWYNidsJ21YG7efeFZ5DIpmlLxeF\ncUU/S73VLKbEuGpe+TH/zWGOOJZIXGhCiarrch08giuDOlYE11h1z/wxNhGVB8ok\n8rmpaTQHKI+lZjOtoMM4rB/x9pLnZ2s9NwiYA3oZ2QKBgQDxN9r4ZwlWN4ANLCyF\nLOflkJe/v2h5zy6wphYCXuhhlP7ns5ymIVdACpMa8TZz2mPEGmiMaYZvURl51UaX\nMy+0s7xl8ykWjKX9fANm0uAysAu+/8JEMcVw0FAP4LpiBveoFOWU7Mjr9sI/PUBb\nVnFh5w+wPv3vRWdd3bVo0hkdfQKBgQDZFau6Afyz8M54Uh+i3CgYdK+5HHE7D5lz\nV7LJIwliz49pY33YJIbZOWMFSl8f0BD5+hx8m7TS9ZxbYhh6jsHZjYPxGNan5p0h\nWY1wPMb/yun2eGsFExKI1eKtZ9aEJn0UrdNTROCMcxKS74ANn/sZwZ7jNBzaGiCV\nJDAb0vLL2QKBgEn8/fdPc3e0klx3/jfjLEYn8cPo7Bzgxct9Rib4AYNc9ksPtq7m\nbyK/m5uZ/T/P7uYJy6O2AnxGfe/20S4zjyB4OQN0cFfwUEHONiTl7creYNv3Cxlr\nwsn1u3kDT2geBvzRXBIwBvkJuU84dHMPsrt66j7/M1ifCzOpe6lpODbpAoGAAnsh\n7E1Lgw70fSGLJQRZHPZwb7AohyFFgrD05SGWYN+4Zt7xOEAqnl7uh8fy0F1DZGf8\nXVw2M9cEw3KajwQEqSTZ5i5/fYnAL/pjCG5ZY+EAzYVQy80NAC1Zmtu98uKxuUPH\nT4NRAanrA2zjTMSQTRoOY9BbqA52Yt34AsllZvkCgYEAoYS/nmlC/RGWdXr92jQg\nFmtPTzXlxVxaS0m3ob0PjMtMem23k3PBgiG4MC0Xfd72kCRU3/fFFfzvCpKyv4zN\nCPyVii2zuYX9/QdkhU8r0rEVQdER2XpX6BmIx7pU2x7YoQX9MrQ+UE28i0z42QRm\ngylviODwBulBdqsNIg147z0=\n-----END PRIVATE KEY-----\n",
+  "client_email": "app-assinatura@assinaturas-455200.iam.gserviceaccount.com",
+  "client_id": "114842259472510183932",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/app-assinatura%40assinaturas-455200.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
