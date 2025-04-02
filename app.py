@@ -8,6 +8,7 @@ import tempfile
 from PIL import Image
 from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
 from streamlit_drawable_canvas import st_canvas
+import json
 
 # Acessar as credenciais armazenadas nos segredos do Streamlit
 credentials_content = st.secrets["google"]["credentials_file"]
