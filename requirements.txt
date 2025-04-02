@@ -6,5 +6,4 @@ Pillow
 streamlit-drawable-canvas
 PyPDF2
 reportlab
-
-
+python-dotenv
