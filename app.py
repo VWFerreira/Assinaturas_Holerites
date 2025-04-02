@@ -1,20 +1,25 @@
 import streamlit as st
 import pandas as pd
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import io
 import tempfile
 from PIL import Image
-from assinatura_pdf import assinar_pdf  # Função para assinatura de PDF
+from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
 from streamlit_drawable_canvas import st_canvas
-from auth import get_sheets_service, get_drive_service  # Importando as funções
 
 # Configurações do Google Sheets e Google Drive
+CREDENTIALS_FILE = 'cred/credenciais.json'
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
 
-# Inicializa o serviço do Google Sheets
-sheets_service = get_sheets_service()
-drive_service = get_drive_service()
+# Carrega as credenciais do Google
+creds = service_account.Credentials.from_service_account_file(CREDENTIALS_FILE)
+
+# Inicializa as APIs do Google Sheets e Google Drive
+sheets_service = build('sheets', 'v4', credentials=creds)
+drive_service = build('drive', 'v3', credentials=creds)
 
 # Função para ler os dados da planilha
 def ler_dados_da_planilha():
@@ -81,6 +86,16 @@ def salvar_assinatura_em_temp_file(assinatura):
         temp_file_path = temp_file.name
     return temp_file_path
 
+# Função para compartilhar o arquivo no Google Drive
+def compartilhar_arquivo(file_id, email):
+    try:
+        permission = {'type': 'user', 'role': 'reader', 'emailAddress': email}
+        drive_service.permissions().create(fileId=file_id, body=permission, sendNotificationEmail=False).execute()
+        return True
+    except Exception as e:
+        st.error(f"Erro ao compartilhar o arquivo: {str(e)}")
+        return False
+
 # Função para enviar o PDF assinado para o Google Drive
 def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
     try:
@@ -146,14 +161,13 @@ if not st.session_state.autenticado:
             autenticar_usuario()
     else:
         st.warning('Não foram encontrados dados na planilha.')
-
 # Página após autenticação
 else:
     st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
     st.write(f"Link do holerite: {st.session_state.link_holerite}")
     
-    st.subheader('Assine aqui:')  # Cria a área para assinatura
-
+    st.subheader('Assine aqui:')
+    
     # Criar o canvas para assinatura
     canvas_result = st_canvas(
         fill_color="rgba(255, 165, 0, 0.3)",  
@@ -207,3 +221,8 @@ else:
     if st.button('Sair'):
         # Limpa o estado da sessão
         st.session_state.clear()  # Limpa o estado da sessão
+
+
+
+
+
