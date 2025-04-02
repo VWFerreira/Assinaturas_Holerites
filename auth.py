@@ -1,24 +1,27 @@
 import os
-from dotenv import load_dotenv
+import json
 from google.oauth2 import service_account
 from googleapiclient.discovery import build
 
-# Carregar as variáveis de ambiente do arquivo .env
-load_dotenv()
+# Carregar as credenciais do Google armazenadas na variável de ambiente
+google_credentials_json = os.getenv('GOOGLE_CREDENTIALS')
 
-# Obter as credenciais do ambiente
-google_credentials = os.getenv('GOOGLE_CREDENTIALS')
+# Verificar se a variável de ambiente está definida corretamente
+if google_credentials_json is None:
+    raise ValueError("A variável GOOGLE_CREDENTIALS não está definida!")
 
-# Salvar as credenciais em um arquivo temporário
-with open('credentials.json', 'w') as f:
-    f.write(google_credentials)
+# Carregar as credenciais do serviço a partir da string JSON
+google_credentials = json.loads(google_credentials_json)
 
-# Carregar as credenciais
-credentials = service_account.Credentials.from_service_account_file('credentials.json')
+# Agora você pode usar as credenciais para acessar a API do Google
+credentials = service_account.Credentials.from_service_account_info(google_credentials)
 
 # Criar o serviço da API do Sheets
-def get_sheets_service():
-    return build('sheets', 'v4', credentials=credentials)
+sheets_service = build('sheets', 'v4', credentials=credentials)
 
-def get_drive_service():
-    return build('drive', 'v3', credentials=credentials)
+# Exemplo de acesso à planilha
+SPREADSHEET_ID = '1gSBcV5EPYYO4mIMh7yNqNs9-GshaR-jR'
+RANGE_NAME = 'Sheet1!A1:H'
+
+result = sheets_service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
+
