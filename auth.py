@@ -7,7 +7,7 @@ from googleapiclient.discovery import build
 load_dotenv()
 
 # Obter as credenciais do ambiente
-google_credentials = os.getenv('GOOGLE_CREDENTIALS_JSON')
+google_credentials = os.getenv('GOOGLE_CREDENTIALS')
 
 # Salvar as credenciais em um arquivo temporário
 with open('credentials.json', 'w') as f:
