@@ -15,9 +15,6 @@ credentials_content = st.secrets["google"]["credentials_file"]
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
 
-# Carrega as credenciais do Google
-creds = service_account.Credentials.from_service_account_file(CREDENTIALS_FILE)
-
 # Inicializa as APIs do Google Sheets e Google Drive
 sheets_service = build('sheets', 'v4', credentials=creds)
 drive_service = build('drive', 'v3', credentials=creds)
