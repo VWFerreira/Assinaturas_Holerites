@@ -6,15 +6,26 @@ from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import io
 import tempfile
 from PIL import Image
-from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
+from assinatura_pdf import assinar_pdf
 from streamlit_drawable_canvas import st_canvas
 import json
 
 # Acessar as credenciais armazenadas nos segredos do Streamlit
 credentials_content = st.secrets["google"]["credentials_file"]
 
-# Criar as credenciais do Google usando o conteúdo das credenciais armazenadas em 'st.secrets'
-credentials_dict = json.loads(credentials_content)
+# Parse the JSON string into a dictionary
+try:
+    credentials_dict = json.loads(credentials_content)
+except json.JSONDecodeError as e:
+    st.error(f"Erro ao parsear as credenciais JSON: {str(e)}")
+    st.stop()
+
+# Criar as credenciais do Google usando o dicionário parsed
+try:
+    creds = service_account.Credentials.from_service_account_info(credentials_dict)
+except ValueError as e:
+    st.error(f"Erro ao criar credenciais: {str(e)}")
+    st.stop()
 
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
