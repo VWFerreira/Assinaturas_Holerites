@@ -14,7 +14,7 @@ import json
 credentials_content = st.secrets["google"]["credentials_file"]
 
 # Criar as credenciais do Google usando o conteúdo das credenciais armazenadas em 'st.secrets'
-creds = service_account.Credentials.from_service_account_info(credentials_content)
+credentials_dict = json.loads(credentials_content)
 
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
