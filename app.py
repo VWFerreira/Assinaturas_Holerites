@@ -1,20 +1,19 @@
 import streamlit as st
 import pandas as pd
-from google.oauth2 import service_account
-from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload, MediaIoBaseUpload
 import io
 import tempfile
 from PIL import Image
-from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
+from assinatura_pdf import assinar_pdf  # Função para assinatura de PDF
 from streamlit_drawable_canvas import st_canvas
+from auth import get_sheets_service  # Importa a função para obter o serviço do Google Sheets
 
-# Carrega as credenciais do Google
-creds = service_account.Credentials.from_service_account_file('cred/credenciais.json')
+# Configurações do Google Sheets e Google Drive
+SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
+RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
 
-# Inicializa as APIs do Google Sheets e Google Drive
-sheets_service = build('sheets', 'v4', credentials=creds)
-drive_service = build('drive', 'v3', credentials=creds)
+# Inicializa o serviço do Google Sheets
+sheets_service = get_sheets_service()
 
 # Função para ler os dados da planilha
 def ler_dados_da_planilha():
@@ -57,12 +56,14 @@ def atualizar_link_na_planilha(nome_funcionario, link_assinado):
         else:
             st.error(f"Não foi possível encontrar a linha para o funcionário {nome_funcionario}")
             return False
+            
     except Exception as e:
         st.error(f"Erro ao atualizar a planilha: {str(e)}")
         return False
 
 # Função para baixar o arquivo PDF do Google Drive
 def baixar_pdf(file_id):
+    drive_service = get_sheets_service()  # Inicializa o serviço do Google Drive
     request = drive_service.files().get_media(fileId=file_id)
     file = io.BytesIO()
     downloader = MediaIoBaseDownload(file, request)
@@ -84,6 +85,7 @@ def salvar_assinatura_em_temp_file(assinatura):
 def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
     try:
         folder_id = '1gSBcV5EPYYO4mIMh7yNqNs9-GshaR-jR'
+        drive_service = get_sheets_service()  # Inicializa o serviço do Google Drive
         file_metadata = {'name': nome_arquivo, 'parents': [folder_id]}
         media = MediaIoBaseUpload(pdf_assinado, mimetype='application/pdf', resumable=True)
         
@@ -151,8 +153,8 @@ else:
     st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
     st.write(f"Link do holerite: {st.session_state.link_holerite}")
     
-    st.subheader('Assine aqui:')
-    
+    st.subheader('Assine aqui:')  # Cria a área para assinatura
+
     # Criar o canvas para assinatura
     canvas_result = st_canvas(
         fill_color="rgba(255, 165, 0, 0.3)",  
@@ -206,4 +208,5 @@ else:
     if st.button('Sair'):
         # Limpa o estado da sessão
         st.session_state.clear()  # Limpa o estado da sessão
+
 
