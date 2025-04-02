@@ -13,7 +13,7 @@ import json
 # Caminho para o logo (local ou URL)
 logo_path = "logo.png"
 
-# Exibindo o logo na aplicação Streamlit
+# Exibindo o logo na aplicação Streamlit, centralizado
 st.image(logo_path, width=200)
 
 # Acessar as credenciais armazenadas nos segredos do Streamlit
@@ -186,7 +186,7 @@ else:
     st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
     st.write(f"Link do holerite: {st.session_state.link_holerite}")
     
-    st.subheader('Assine aqui:')
+    st.subheader('Assine aqui:')  # Área para assinatura
     
     # Criar o canvas para assinatura
     canvas_result = st_canvas(
@@ -237,9 +237,12 @@ else:
                 st.error("Não foi possível salvar o arquivo assinado.")
         except Exception as e:
             st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
-    
+
+    # Rodapé
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: gray;'>By GENPAC 2025</p>", unsafe_allow_html=True)
+
     if st.button('Sair'):
         # Limpa o estado da sessão
-        st.session_state.clear()  # Limpa o estado da sessão
-
+        st.session_state.clear()
 
