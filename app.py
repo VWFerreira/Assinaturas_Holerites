@@ -155,6 +155,55 @@ else:
     
     # Criar o canvas para assinatura
     canvas_result = st_canvas(
-        fill_color="rgba(255, 165, 0,_
+        fill_color="rgba(255, 165, 0, 0.3)",  
+        stroke_width=2,
+        stroke_color="#000000",
+        background_color="#FFFFFF",
+        height=150,
+        width=300,
+        drawing_mode="freedraw",
+        key="canvas",
+    )
 
+    # Salvar a assinatura desenhada
+    if canvas_result.image_data is not None:
+        st.session_state.signature = canvas_result.image_data
+
+    # Se já existe uma assinatura, exiba o botão para assinar o PDF
+    if canvas_result.image_data is not None and st.button('Assinar PDF'):
+        try:
+            # Salva a assinatura como arquivo temporário
+            assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
+            
+            # Agora a assinatura é salva em um arquivo temporário
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
+                # Salve o PDF original em um arquivo temporário
+                temp_pdf_file.write(st.session_state.pdf_file.read())
+                temp_pdf_path = temp_pdf_file.name
+            
+            # Chama a função para assinar o PDF com a assinatura
+            pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path)
+            
+            nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
+            
+            # Envia o PDF assinado para o Google Drive e pega o link
+            file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
+            
+            if file_id_assinado and web_link:
+                # Atualiza o link do documento assinado na planilha
+                if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
+                    st.success(f"Holerite assinado com sucesso e link atualizado na planilha!")
+                    st.markdown(f"**ID do arquivo:** {file_id_assinado}")
+                    st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
+                else:
+                    st.warning("Holerite assinado com sucesso, mas não foi possível atualizar o link na planilha.")
+                    st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
+            else:
+                st.error("Não foi possível salvar o arquivo assinado.")
+        except Exception as e:
+            st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
+    
+    if st.button('Sair'):
+        # Limpa o estado da sessão
+        st.session_state.clear()  # Limpa o estado da sessão
 
