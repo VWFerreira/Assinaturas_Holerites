@@ -146,7 +146,7 @@ def verificar_senha(senha_digitada, senha_armazenada):
     return senha_digitada == senha_armazenada
 
 # Interface Streamlit
-st.title('    Assinatura de Holerites')
+st.markdown("<h1 style='text-align: center;'>Assinatura de Holerites</h1>", unsafe_allow_html=True)
 
 # Aplicar CSS para melhorar a aparência
 st.markdown("""
