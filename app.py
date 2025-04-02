@@ -20,7 +20,7 @@ try:
     logo_path = "logo.png"
     
   # Criando 3 colunas (uma centralizada)
-    col1, col2, col3 = st.columns([1, 4, 1])
+    col1, col2, col3 = st.columns([2, 4, 2])
     
     # Exibindo a imagem na coluna do meio
     with col2:
