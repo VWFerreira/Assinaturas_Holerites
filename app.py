@@ -9,8 +9,11 @@ from PIL import Image
 from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
 from streamlit_drawable_canvas import st_canvas
 
-# Acessar as credenciais armazenadas nos segredos
+# Acessar as credenciais armazenadas nos segredos do Streamlit
 credentials_content = st.secrets["google"]["credentials_file"]
+
+# Criar as credenciais do Google usando o conteúdo das credenciais armazenadas em 'st.secrets'
+creds = service_account.Credentials.from_service_account_info(credentials_content)
 
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
@@ -159,6 +162,7 @@ if not st.session_state.autenticado:
             autenticar_usuario()
     else:
         st.warning('Não foram encontrados dados na planilha.')
+
 # Página após autenticação
 else:
     st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
@@ -219,8 +223,6 @@ else:
     if st.button('Sair'):
         # Limpa o estado da sessão
         st.session_state.clear()  # Limpa o estado da sessão
-
-
 
 
 
