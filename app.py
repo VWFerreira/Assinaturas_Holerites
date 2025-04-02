@@ -12,7 +12,7 @@ import json
 import os
 
 # Configuração do título da página
-st.set_page_config(page_title="Assinatura Eletrônica de Holerites", page_icon="📄")
+st.set_page_config(page_title="Assinatura de Holerites", page_icon="📄")
 
 # Tentativa de exibir o logo com tratamento de erro
 try:
