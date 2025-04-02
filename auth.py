@@ -1,22 +1,24 @@
-# app.py
+import os
+from dotenv import load_dotenv
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
 
-import streamlit as st
-from auth import get_sheets_service  # Importa a função para obter o serviço do Sheets
+# Carregar as variáveis de ambiente do arquivo .env
+load_dotenv()
 
-# Inicializa o serviço do Google Sheets
-sheets_service = get_sheets_service()
+# Obter as credenciais do ambiente
+google_credentials = os.getenv('GOOGLE_CREDENTIALS_JSON')
 
-# Definir o ID da planilha e o intervalo
-SPREADSHEET_ID = '1gSBcV5EPYYO4mIMh7yNqNs9-GshaR-jR'
-RANGE_NAME = 'Sheet1!A1:H'
+# Salvar as credenciais em um arquivo temporário
+with open('credentials.json', 'w') as f:
+    f.write(google_credentials)
 
-# Exemplo de como acessar a planilha
-result = sheets_service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range=RANGE_NAME).execute()
-values = result.get('values', [])
+# Carregar as credenciais
+credentials = service_account.Credentials.from_service_account_file('credentials.json')
 
-if not values:
-    st.warning("Nenhum dado encontrado na planilha.")
-else:
-    # Processar os dados da planilha conforme necessário
-    st.write(values)
+# Criar o serviço da API do Sheets
+def get_sheets_service():
+    return build('sheets', 'v4', credentials=credentials)
 
+def get_drive_service():
+    return build('drive', 'v3', credentials=credentials)
