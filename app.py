@@ -13,6 +13,9 @@ import json
 # Acessar as credenciais armazenadas nos segredos do Streamlit
 credentials_content = st.secrets["google"]["credentials_file"]
 
+# Replace unescaped newlines with properly escaped newlines
+credentials_content = credentials_content.replace('\n', '\\n')
+
 # Parse the JSON string into a dictionary
 try:
     credentials_dict = json.loads(credentials_content)
