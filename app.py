@@ -18,8 +18,13 @@ st.set_page_config(page_title="Assinatura Eletrônica de Holerites", page_icon="
 try:
     # Caminho para o logo (local ou URL)
     logo_path = "logo.png"
-    # Exibindo o logo na aplicação Streamlit, centralizado
-    st.image(logo_path, width=200)
+    
+  # Criando 3 colunas (uma centralizada)
+    col1, col2, col3 = st.columns([1, 4, 1])
+    
+    # Exibindo a imagem na coluna do meio
+    with col2:
+        st.image(logo_path, width=200)
 except Exception as e:
     st.warning(f"Não foi possível carregar o logo: {str(e)}")
 
