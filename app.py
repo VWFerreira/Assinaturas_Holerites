@@ -10,6 +10,12 @@ from assinatura_pdf import assinar_pdf
 from streamlit_drawable_canvas import st_canvas
 import json
 
+# Caminho para o logo (local ou URL)
+logo_path = "logo.png"
+
+# Exibindo o logo na aplicação Streamlit
+st.image(logo_path, width=200)
+
 # Acessar as credenciais armazenadas nos segredos do Streamlit
 credentials_content = st.secrets["google"]["credentials_file"]
 
