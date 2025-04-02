@@ -9,8 +9,9 @@ from PIL import Image
 from assinatura_pdf import assinar_pdf  # Importando a função de assinatura
 from streamlit_drawable_canvas import st_canvas
 
-# Configurações do Google Sheets e Google Drive
-CREDENTIALS_FILE = 'cred/credenciais.json'
+# Acessar as credenciais armazenadas nos segredos
+credentials_content = st.secrets["google"]["credentials_file"]
+
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
 RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
 
