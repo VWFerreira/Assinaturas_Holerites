@@ -237,4 +237,3 @@ else:
         st.session_state.clear()  # Limpa o estado da sessão
 
 
-
