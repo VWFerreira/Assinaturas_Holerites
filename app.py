@@ -136,7 +136,7 @@ st.markdown("""
     <ul>
         <li>🧑‍💼 Selecione seu nome na lista.</li>
         <li>🔐 Digite sua senha corretamente.</li>
-        <li>🖊️ Desenhe sua assinatura com clareza.</li>
+        <li>🖊️ Desenhe sua assinatura com clareza e conforme documento assinado no RH (protocolo RUBRICA).</li>
         <li>✅ Clique em <strong>\"Assinar PDF\"</strong> para finalizar.</li>
     </ul>
 </div>
