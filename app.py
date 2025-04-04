@@ -179,16 +179,16 @@ else:
     st.subheader('🖊️ Assine aqui:')
     st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
 
-        canvas_result = st_canvas(
-            fill_color="rgba(255, 165, 0, 0.3)",  
-            stroke_width=2,
-            stroke_color="#000000",
-            background_color="#FFFFFF",
-            height=150,
-            width=300,
-            drawing_mode="freedraw",
-            key="canvas"
-        )
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",  
+        stroke_width=2,
+        stroke_color="#000000",
+        background_color="#FFFFFF",
+        height=150,
+        width=300,
+        drawing_mode="freedraw",
+        key="canvas"
+    )
 
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
