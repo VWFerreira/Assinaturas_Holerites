@@ -34,13 +34,13 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
 
     c.setFont("Helvetica", 10)
     c.drawString(100, 250, "Assinatura do colaborador:")
-    c.drawImage(assinatura_sem_fundo, 100, 180, width=200, height=50)
+    c.drawImage(assinatura_sem_fundo, 100, 200, width=200, height=40)
 
     now = datetime.now(pytz.timezone("America/Sao_Paulo"))
     data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
     c.setFont("Helvetica", 9)
-    c.drawString(100, 140, f"Data e hora: {data_hora}")
-    c.drawString(100, 120, f"CPF: {cpf}")
+    c.drawString(100, 180, f"CPF: {cpf}")
+    c.drawString(100, 165, f"Data e hora: {data_hora}")
 
     c.save()
     packet.seek(0)
@@ -56,8 +56,3 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     pdf_writer.write(output)
     output.seek(0)
     return output
-
-
-
-
-
