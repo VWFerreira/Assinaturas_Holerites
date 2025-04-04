@@ -59,7 +59,7 @@ def atualizar_link_na_planilha(nome_funcionario, link_assinado):
                 linha = i + 1
                 break
         if linha:
-            range_to_update = f'G{linha}'
+            range_to_update = f'H{linha}'
             valores_para_atualizar = [[link_assinado]]
             body = {'values': valores_para_atualizar}
             result = sheets_service.spreadsheets().values().update(
