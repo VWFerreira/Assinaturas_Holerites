@@ -197,7 +197,7 @@ def autenticar_usuario():
     
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
-        st.session_state.link_holerite = dados_funcionario.iloc[4]  # Coluna E com o link do holerite
+        st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F com o link do holerite
         st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]  # Extrai o file_id do link
         st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
     else:
