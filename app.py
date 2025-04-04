@@ -145,6 +145,22 @@ def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
 def verificar_senha(senha_digitada, senha_armazenada):
     return senha_digitada == senha_armazenada
 
+# AVISO GERAL DO RH
+if 'aviso_geral' not in st.session_state:
+    st.session_state.aviso_geral = "📢 Atenção! Os holerites estarão disponíveis até o dia 10 de cada mês. Qualquer dúvida, entre em contato com o RH."
+
+if st.session_state.funcionario_selecionado == "DEPARTAMENTO PESSOAL" and st.session_state.senha == "15789":
+    novo_aviso = st.text_area("📝 Editar Aviso Geral", st.session_state.aviso_geral)
+    if st.button("💾 Salvar Aviso"):
+        st.session_state.aviso_geral = novo_aviso
+        st.success("Aviso atualizado com sucesso!")
+
+st.markdown(f"""
+<div style='background-color:#fff3cd;padding:10px;border-radius:5px;border:1px solid #ffeeba;margin-bottom:15px;'>
+    <strong>📢 Aviso:</strong> {aviso_geral}
+</div>
+""", unsafe_allow_html=True)
+
 # Interface Streamlit
 st.markdown("<h1 style='text-align: center;'>Assinatura de Holerites</h1>", unsafe_allow_html=True)
 
@@ -195,14 +211,20 @@ def autenticar_usuario():
     if st.session_state.funcionario_selecionado not in df['NOME'].values:
         st.error("Funcionário não encontrado na planilha. Verifique o nome selecionado.")
         return
+
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
     senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
 
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
-        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Garante que o nome fique salvo corretamente
+        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Nome na coluna A
+
         st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F com o link do holerite
-        st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]  # Extrai o file_id do link
+        if not st.session_state.link_holerite or 'drive.google.com' not in st.session_state.link_holerite:
+            st.warning("Aguarde! Ainda não há holerite disponível para você.")
+            return
+
+        st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]
         st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
     else:
         st.session_state.autenticado = False
@@ -227,7 +249,12 @@ with st.container():
     # Página após autenticação
     else:
         st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
-        
+
+        # Campo para observação
+        observacao = st.text_area("Observações (opcional):", placeholder="Digite aqui alguma observação que queira deixar registrada...")
+        if observacao:
+            st.session_state.observacao = observacao
+
         # Exibir informações do holerite em um card
         st.markdown(f"""
         <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
@@ -235,7 +262,7 @@ with st.container():
             <p>Link: <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
         </div>
         """, unsafe_allow_html=True)
-        
+
         st.subheader('Assine aqui:')  # Área para assinatura
         
         # Criar o canvas para assinatura com instruções
@@ -306,5 +333,6 @@ with st.container():
 # Rodapé - Colocado no final, fora dos blocos condicionais
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: gray;'>By GENPAC 2025</p>", unsafe_allow_html=True)
+
 
 
