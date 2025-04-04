@@ -18,10 +18,10 @@ st.set_page_config(page_title="Assinatura de Holerites", page_icon="📄")
 try:
     # Caminho para o logo (local ou URL)
     logo_path = "logo.png"
-    
-  # Criando 3 colunas (uma centralizada)
+
+    # Criando 3 colunas (uma centralizada)
     col1, col2, col3 = st.columns([3, 4, 2])
-    
+
     # Exibindo a imagem na coluna do meio
     with col2:
         st.image(logo_path, width=200)
@@ -68,32 +68,32 @@ def atualizar_link_na_planilha(nome_funcionario, link_assinado):
             spreadsheetId=SPREADSHEET_ID,
             range='A:A'
         ).execute()
-        
+
         valores = result.get('values', [])
         linha = None
-        
+
         for i, row in enumerate(valores):
             if i > 0 and row and row[0] == nome_funcionario:
                 linha = i + 1
                 break
-        
+
         if linha:
             range_to_update = f'G{linha}'
             valores_para_atualizar = [[link_assinado]]
             body = {'values': valores_para_atualizar}
-            
+
             result = sheets_service.spreadsheets().values().update(
                 spreadsheetId=SPREADSHEET_ID,
                 range=range_to_update,
                 valueInputOption='RAW',
                 body=body
             ).execute()
-            
+
             return True
         else:
             st.error(f"Não foi possível encontrar a linha para o funcionário {nome_funcionario}")
             return False
-            
+
     except Exception as e:
         st.error(f"Erro ao atualizar a planilha: {str(e)}")
         return False
@@ -133,9 +133,9 @@ def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
         folder_id = '1gSBcV5EPYYO4mIMh7yNqNs9-GshaR-jR'
         file_metadata = {'name': nome_arquivo, 'parents': [folder_id]}
         media = MediaIoBaseUpload(pdf_assinado, mimetype='application/pdf', resumable=True)
-        
+
         file = drive_service.files().create(body=file_metadata, media_body=media, fields='id, webViewLink').execute()
-        
+
         return file.get('id'), file.get('webViewLink')
     except Exception as e:
         st.error(f"Erro ao enviar o arquivo: {str(e)}")
@@ -194,7 +194,7 @@ df = st.session_state.df
 def autenticar_usuario():
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
     senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
-    
+
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
         st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F com o link do holerite
@@ -213,7 +213,7 @@ with st.container():
             with st.form(key='login_form'):
                 st.session_state.funcionario_selecionado = st.selectbox('Selecione seu nome:', df['NOME'].tolist())
                 st.session_state.senha = st.text_input('Digite sua senha:', type='password')
-                
+
                 submit_button = st.form_submit_button(label='Entrar')
                 if submit_button:
                     autenticar_usuario()
@@ -223,7 +223,7 @@ with st.container():
     # Página após autenticação
     else:
         st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
-        
+
         # Exibir informações do holerite em um card
         st.markdown(f"""
         <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
@@ -231,18 +231,16 @@ with st.container():
             <p>Link: <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
         </div>
         """, unsafe_allow_html=True)
-        
+
         st.subheader('Assine aqui:')  # Área para assinatura
-        
-        # Criar o canvas para assinatura com instruções
+
         st.markdown("""
         <p style="color: #666; font-size: 0.9em;">
             Use o mouse ou toque para desenhar sua assinatura no campo abaixo. 
             Certifique-se de que a assinatura esteja clara e completa.
         </p>
         """, unsafe_allow_html=True)
-        
-        # Criar o canvas para assinatura
+
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",  
             stroke_width=2,
@@ -254,38 +252,27 @@ with st.container():
             key="canvas",
         )
 
-        # Salvar a assinatura desenhada
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
-       
+
         with col2:
-            # Se já existe uma assinatura, exiba o botão para assinar o PDF
-            if canvas_result.image_data is not None and st.button('Assinar PDF'):
+            if canvas_result.image_data is not None and st.button('✍️ Assinar e Enviar Holerite', use_container_width=True):
                 with st.spinner('Processando assinatura...'):
                     try:
-                        # Salva a assinatura como arquivo temporário
                         assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
-                        
-                        # Agora a assinatura é salva em um arquivo temporário
+
                         with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
-                            # Salve o PDF original em um arquivo temporário
                             temp_pdf_file.write(st.session_state.pdf_file.read())
                             temp_pdf_path = temp_pdf_file.name
-                        
-                        # Chama a função para assinar o PDF com a assinatura
+
                         pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path)
-                        
+
                         nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
-                        
-                        # Envia o PDF assinado para o Google Drive e pega o link
                         file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
-                        
+
                         if file_id_assinado and web_link:
-                            # Atualiza o link do documento assinado na planilha
                             if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
                                 st.success(f"Holerite assinado com sucesso e link atualizado na planilha!")
-                                
-                                # Exibe informações em um card
                                 st.markdown(f"""
                                 <div style="padding: 15px; border-radius: 5px; border: 1px solid #d4edda; background-color: #d4edda; margin: 10px 0;">
                                     <h4 style="color: #155724;">Documento assinado com sucesso!</h4>
@@ -297,8 +284,7 @@ with st.container():
                                 st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
                         else:
                             st.error("Não foi possível salvar o arquivo assinado.")
-                            
-                        # Limpar arquivos temporários
+
                         try:
                             os.unlink(assinatura_temp_file_path)
                             os.unlink(temp_pdf_path)
@@ -308,7 +294,6 @@ with st.container():
                         st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
 
         if st.button('Sair'):
-            # Limpa o estado da sessão
             st.session_state.clear()
             st.experimental_rerun()
 
