@@ -159,7 +159,7 @@ try:
     if mensagem_k2:
         st.markdown(f"""
         <div style='background-color: #FF0000; padding: 10px; border-radius: 5px; border: 0px solid #c3e6cb; margin-bottom: 15px;'>
-            <strong>📢 Informação:</strong> {mensagem_k2}
+            <strong>🔔 Informação:</strong> {mensagem_k2}
         </div>
         """, unsafe_allow_html=True)
 except Exception as e:
@@ -239,7 +239,7 @@ with st.container():
     if not st.session_state.autenticado:
         if df is not None:
             with st.form(key='login_form'):
-                st.session_state.funcionario_selecionado = st.selectbox('👤 Selecione seu nome:', df['NOME'].tolist())
+                st.session_state.funcionario_selecionado = st.selectbox(' Selecione seu nome:', df['NOME'].tolist())
                 st.session_state.senha = st.text_input('🔒 Digite sua senha:', type='password')
                 if st.form_submit_button('Entrar'):
                     autenticar_usuario()
@@ -256,7 +256,7 @@ with st.container():
         </div>
         """, unsafe_allow_html=True)
 
-        st.subheader('🖊️ Assine aqui:')
+        st.subheader('✒️ Assine aqui:')
         st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
 
         canvas_result = st_canvas(
