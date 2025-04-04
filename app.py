@@ -236,12 +236,12 @@ with st.container():
                     st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
         if st.button('🚪 Sair'):
             st.session_state.clear()
-            st.experimental_rerun()
+            st.rerun()
 
 st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.85em;'>
-    <p><strong>GENPAC Sistemas</strong> © 2025 | Todos os direitos reservados.</p>
-    <p>Desenvolvido para uso interno - Gestão Pública e Transparência</p>
+    <p><strong>GENPAC</strong> © 2025 | Todos os direitos reservados.</p>
+    <p>Desenvolvido para uso interno - Gestão de Progetos</p>
 </div>
 """, unsafe_allow_html=True)
