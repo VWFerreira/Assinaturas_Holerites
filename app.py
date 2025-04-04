@@ -158,7 +158,7 @@ try:
 
     if mensagem_k2:
         st.markdown(f"""
-        <div style='background-color: #d4edda; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb; margin-bottom: 15px;'>
+        <div style='background-color: #FF0000; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb; margin-bottom: 15px;'>
             <strong>📢 Informação:</strong> {mensagem_k2}
         </div>
         """, unsafe_allow_html=True)
@@ -307,7 +307,7 @@ with st.container():
 st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.9em; margin-top: 10px;'>
-    Desenvolvido com 💻 por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
+    Desenvolvido por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
     <a href='mailto:appgenesis@gmail.com' style='color: #888;'>appgenesis@gmail.com</a>
 </div>
 """, unsafe_allow_html=True)
