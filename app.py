@@ -273,7 +273,7 @@ st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.85em;'>
     <p><strong>GENPAC</strong> © 2025 | Todos os direitos reservados.</p>
-    <p>Desenvolvido para uso interno - Gestão de Progetos</p>
+    <p>Desenvolvido para uso interno - Gestão de Projetos</p>
 </div>
 """, unsafe_allow_html=True)
 
