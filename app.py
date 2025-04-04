@@ -113,17 +113,17 @@ if not st.session_state.autenticado:
         senha = st.text_input('🔒 Digite sua senha:', type='password')
         if st.form_submit_button('🔓 Entrar'):
             dados_funcionario = df[df['NOME'] == nome].iloc[0]
-            if verificar_senha(senha, dados_funcionario['SENHA']):
+            if verificar_senha(senha, dados_funcionario.iloc[8]):
                 st.session_state.autenticado = True
                 st.session_state.funcionario = dados_funcionario
-                st.session_state.pdf_file = baixar_pdf(dados_funcionario['LINK HOLERITE'].split('/')[-2])
+                st.session_state.pdf_file = baixar_pdf(dados_funcionario.iloc[5].split('/')[-2])
             else:
                 st.error("Senha incorreta.")
 
 # Assinatura
 if st.session_state.autenticado:
-    st.success(f"Bem-vindo(a), {st.session_state.funcionario['NOME']}!")
-    st.markdown(f"<p><a href='{st.session_state.funcionario['LINK HOLERITE']}' target='_blank'>🔗 Visualizar holerite original</a></p>", unsafe_allow_html=True)
+    st.success(f"Bem-vindo(a), {st.session_state.funcionario.iloc[0]}!")
+    st.markdown(f"<p><a href='{st.session_state.funcionario.iloc[5]}' target='_blank'>🔗 Visualizar holerite original</a></p>", unsafe_allow_html=True)
     st.subheader('✍️ Assine abaixo:')
 
     canvas_result = st_canvas(
@@ -146,13 +146,13 @@ if st.session_state.autenticado:
                         temp_pdf_file.write(st.session_state.pdf_file.read())
                         temp_pdf_path = temp_pdf_file.name
 
-                    cpf = st.session_state.funcionario['CPF']
+                    cpf = st.session_state.funcionario.iloc[4]
                     pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_path, cpf)
 
-                    nome_arquivo = f"{st.session_state.funcionario['NOME']}_holerite_assinado.pdf"
+                    nome_arquivo = f"{st.session_state.funcionario.iloc[0]}_holerite_assinado.pdf"
                     file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
 
-                    if atualizar_link_na_planilha(st.session_state.funcionario['NOME'], web_link):
+                    if atualizar_link_na_planilha(st.session_state.funcionario.iloc[0], web_link):
                         st.success("✅ Holerite assinado e link atualizado na planilha!")
                         st.markdown(f"[📄 Visualizar documento assinado]({web_link})")
                     else:
@@ -175,3 +175,4 @@ st.markdown("""
     <p>Desenvolvido para uso interno - Gestão de Projetos</p>
 </div>
 """, unsafe_allow_html=True)
+
