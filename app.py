@@ -216,7 +216,7 @@ with st.container():
         )
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
-        if canvas_result.image_data is not None and st.button('🖊️ Assinar PDF'):
+        if canvas_result.image_data is not None and st.button('🖊️ Assinar e Enviar PDF'):
             with st.spinner('Processando assinatura...'):
                 try:
                     assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
@@ -247,7 +247,7 @@ with st.container():
                         pass
                 except Exception as e:
                     st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
-        if st.button('🚪 Sair'):
+        if st.button('↩️ Sair'):
             st.session_state.clear()
             st.rerun()
 
