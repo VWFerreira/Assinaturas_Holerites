@@ -120,7 +120,7 @@ def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
 def verificar_senha(senha_digitada, senha_armazenada):
     return senha_digitada == senha_armazenada
 
-st.markdown("<h1 style='text-align: center;'>📄 Assinatura de Holerites</h1>", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>📄 Assinatura de Holerites Polo RS</h1>", unsafe_allow_html=True)
 
 try:
     instrucao_cell = sheets_service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range='K2').execute()
