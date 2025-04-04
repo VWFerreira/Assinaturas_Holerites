@@ -189,7 +189,7 @@ with st.container():
                     autenticar_usuario()
         else:
             st.warning('Não foram encontrados dados na planilha.')
-    else:
+        else:
         st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
         st.markdown(f"""
         <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
@@ -197,6 +197,7 @@ with st.container():
             <p>Link: <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
         </div>
         """, unsafe_allow_html=True)
+
         st.subheader('Assine aqui:')
         st.markdown("""
         <p style="color: #666; font-size: 0.9em;">
@@ -204,6 +205,7 @@ with st.container():
             Certifique-se de que a assinatura esteja clara e completa.
         </p>
         """, unsafe_allow_html=True)
+
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",
             stroke_width=2,
@@ -212,53 +214,50 @@ with st.container():
             height=150,
             width=300,
             drawing_mode="freedraw",
-            key="canvas",
+            key="canvas"
         )
+
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
 
-        if canvas_result.image_data is not None and st.button('🖊️ Assinar e Enviar PDF'):
-            with st.spinner('Processando assinatura...'):
-                try:
-                    assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
+            if st.button('🖊️ Assinar e Enviar PDF'):
+                with st.spinner('Processando assinatura...'):
+                    try:
+                        assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
 
-                # Cria o PDF temporário a partir do original baixado
-                with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
-                    temp_pdf_file.write(st.session_state.pdf_file.read())
-                    temp_pdf_path = temp_pdf_file.name
+                        with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
+                            temp_pdf_file.write(st.session_state.pdf_file.read())
+                            temp_pdf_path = temp_pdf_file.name
 
-                # Busca o CPF na planilha e assina o PDF
-                cpf = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]['CPF']
-                pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path, cpf)
+                        cpf = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]['CPF']
+                        pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path, cpf)
 
-                # Envia o PDF assinado para o Drive
-                nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
-                file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
+                        nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
+                        file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
 
-                if file_id_assinado and web_link:
-                    if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
-                        st.success("Holerite assinado com sucesso e link atualizado na planilha!")
-                        st.markdown(f"""
-                        <div style="padding: 15px; border-radius: 5px; border: 1px solid #d4edda; background-color: #d4edda; margin: 10px 0;">
-                            <h4 style="color: #155724;">Documento assinado com sucesso!</h4>
-                            <p style="margin: 5px 0;"><a href="{web_link}" target="_blank">Abrir documento assinado</a></p>
-                        </div>
-                        """, unsafe_allow_html=True)
-                    else:
-                        st.warning("Holerite assinado, mas não foi possível atualizar o link na planilha.")
-                        st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
-                else:
-                    st.error("Não foi possível salvar o arquivo assinado.")
+                        if file_id_assinado and web_link:
+                            if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
+                                st.success("Holerite assinado com sucesso e link atualizado na planilha!")
+                                st.markdown(f"""
+                                <div style="padding: 15px; border-radius: 5px; border: 1px solid #d4edda; background-color: #d4edda; margin: 10px 0;">
+                                    <h4 style="color: #155724;">Documento assinado com sucesso!</h4>
+                                    <p style="margin: 5px 0;"><a href="{web_link}" target="_blank">Abrir documento assinado</a></p>
+                                </div>
+                                """, unsafe_allow_html=True)
+                            else:
+                                st.warning("Holerite assinado, mas não foi possível atualizar o link na planilha.")
+                                st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
+                        else:
+                            st.error("Não foi possível salvar o arquivo assinado.")
 
-                try:
-                    os.unlink(assinatura_temp_file_path)
-                    os.unlink(temp_pdf_path)
-                except:
-                    pass
+                        try:
+                            os.unlink(assinatura_temp_file_path)
+                            os.unlink(temp_pdf_path)
+                        except:
+                            pass
 
-            except Exception as e:
-                st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
-
+                    except Exception as e:
+                        st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
 
         if st.button('↩️ Sair'):
             st.session_state.clear()
