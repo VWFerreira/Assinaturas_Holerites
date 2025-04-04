@@ -158,7 +158,7 @@ try:
 
     if mensagem_k2:
         st.markdown(f"""
-        <div style='background-color: #FF0000; padding: 10px; border-radius: 0px; border: 0px solid #c3e6cb; margin-bottom: 15px;'>
+        <div style='background-color: #FF0000; padding: 10px; border-radius: 5px; border: 0px solid #c3e6cb; margin-bottom: 15px;'>
             <strong>📢 Informação:</strong> {mensagem_k2}
         </div>
         """, unsafe_allow_html=True)
