@@ -217,10 +217,10 @@ with st.container():
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
 
-    if canvas_result.image_data is not None and st.button('🖊️ Assinar e Enviar PDF'):
-        with st.spinner('Processando assinatura...'):
-            try:
-                assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
+        if canvas_result.image_data is not None and st.button('🖊️ Assinar e Enviar PDF'):
+            with st.spinner('Processando assinatura...'):
+                try:
+                    assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
 
                 # Cria o PDF temporário a partir do original baixado
                 with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
