@@ -159,11 +159,24 @@ def autenticar_usuario():
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
         st.session_state.link_holerite = dados_funcionario.iloc[5]
-        st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]
-        st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
+
+        # Verifica se o link está presente e bem formatado
+        link = st.session_state.link_holerite
+        if link and "drive.google.com" in link and "/" in link:
+            partes = link.split('/')
+            if len(partes) >= 6:
+                st.session_state.file_id = partes[-2]
+                st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
+            else:
+                st.error("O link do holerite está mal formatado.")
+                st.session_state.autenticado = False
+        else:
+            st.error("Link do holerite inválido ou ausente.")
+            st.session_state.autenticado = False
     else:
         st.session_state.autenticado = False
         st.error('Senha incorreta.')
+
 
 with st.container():
     if not st.session_state.autenticado:
