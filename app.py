@@ -11,7 +11,7 @@ from streamlit_drawable_canvas import st_canvas
 import json
 import os
 
-st.set_page_config(page_title="Assinatura de Holerites", page_icon="logo.png")
+st.set_page_config(page_title="Assinatura de Holerites Polo RS", page_icon="logo.png")
 
 try:
     logo_path = "logo.png"
