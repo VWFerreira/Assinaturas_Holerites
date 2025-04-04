@@ -166,7 +166,7 @@ except Exception as e:
     st.warning(f"Erro ao buscar mensagem de aviso: {str(e)}")
 
 # Exibir link do holerite se disponível
-if st.session_state.link_holerite and 'drive.google.com' in st.session_state.link_holerite:
+if 'link_holerite' in st.session_state and st.session_state.link_holerite and 'drive.google.com' in st.session_state.link_holerite:
     st.markdown(f"""
     <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
         <h4>📄 Seu holerite está disponível</h4>
@@ -176,53 +176,53 @@ if st.session_state.link_holerite and 'drive.google.com' in st.session_state.lin
 else:
     st.warning("⚠️ O link do holerite não está disponível ou é inválido. Aguarde o envio pelo RH.")
 
-        st.subheader('🖊️ Assine aqui:')
-        st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
+    st.subheader('🖊️ Assine aqui:')
+    st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
 
-        canvas_result = st_canvas(
-            fill_color="rgba(255, 165, 0, 0.3)",  
-            stroke_width=2,
-            stroke_color="#000000",
-            background_color="#FFFFFF",
-            height=150,
-            width=300,
-            drawing_mode="freedraw",
-            key="canvas"
-        )
+    canvas_result = st_canvas(
+        fill_color="rgba(255, 165, 0, 0.3)",  
+        stroke_width=2,
+        stroke_color="#000000",
+        background_color="#FFFFFF",
+        height=150,
+        width=300,
+        drawing_mode="freedraw",
+        key="canvas"
+    )
 
-        if canvas_result.image_data is not None:
-            st.session_state.signature = canvas_result.image_data
+    if canvas_result.image_data is not None:
+        st.session_state.signature = canvas_result.image_data
 
-        if canvas_result.image_data is not None and st.button('✍️ Assinar e Enviar Holerite', use_container_width=True):
-            with st.spinner('Processando assinatura...'):
-                try:
-                    assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
-                    with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
-                        temp_pdf_file.write(st.session_state.pdf_file.read())
-                        temp_pdf_path = temp_pdf_file.name
+    if canvas_result.image_data is not None and st.button('✍️ Assinar e Enviar Holerite', use_container_width=True):
+        with st.spinner('Processando assinatura...'):
+            try:
+                assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
+                with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
+                    temp_pdf_file.write(st.session_state.pdf_file.read())
+                    temp_pdf_path = temp_pdf_file.name
 
-                    pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path)
-                    nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
-                    file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
+                pdf_assinado = assinar_pdf(temp_pdf_path, assinatura_temp_file_path)
+                nome_arquivo = f"{st.session_state.funcionario_selecionado}_holerite_assinado.pdf"
+                file_id_assinado, web_link = enviar_pdf_assinado(pdf_assinado, nome_arquivo)
 
-                    if file_id_assinado and web_link:
-                        if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
-                            st.success("✅ Holerite assinado com sucesso e link atualizado!")
-                            st.markdown(f"<a href='{web_link}' target='_blank'>📎 Abrir holerite assinado</a>", unsafe_allow_html=True)
-                        else:
-                            st.warning("Holerite assinado, mas não foi possível atualizar a planilha.")
+                if file_id_assinado and web_link:
+                    if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
+                        st.success("✅ Holerite assinado com sucesso e link atualizado!")
+                        st.markdown(f"<a href='{web_link}' target='_blank'>📎 Abrir holerite assinado</a>", unsafe_allow_html=True)
                     else:
-                        st.error("Erro ao salvar o arquivo assinado.")
+                        st.warning("Holerite assinado, mas não foi possível atualizar a planilha.")
+                else:
+                    st.error("Erro ao salvar o arquivo assinado.")
 
-                    os.unlink(assinatura_temp_file_path)
-                    os.unlink(temp_pdf_path)
+                os.unlink(assinatura_temp_file_path)
+                os.unlink(temp_pdf_path)
 
-                except Exception as e:
-                    st.error(f"Erro ao processar a assinatura: {str(e)}")
+            except Exception as e:
+                st.error(f"Erro ao processar a assinatura: {str(e)}")
 
-        if st.button('🚪 Sair'):
-            st.session_state.clear()
-            st.experimental_rerun()
+    if st.button('🚪 Sair'):
+        st.session_state.clear()
+        st.experimental_rerun()
 
 st.markdown("""
 <hr>
@@ -230,4 +230,4 @@ st.markdown("""
     Desenvolvido com 💻 por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
     <a href='mailto:suporte@genpac.com.br' style='color: #888;'>suporte@genpac.com.br</a>
 </div>
-""", unsafe_allow_html=True)  File 
+""", unsafe_allow_html=True)
