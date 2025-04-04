@@ -96,8 +96,8 @@ if not st.session_state.autenticado:
                 if verificar_senha(senha, dados['SENHA']):
                     st.session_state.autenticado = True
                     st.session_state.nome = nome
-                    st.session_state.link = dados['LINK HOLERITE']
-                    st.session_state.file_id = dados['LINK HOLERITE'].split("/")[-2]
+                    st.session_state.link = dados[5]  # Coluna F
+                    st.session_state.file_id = dados[5].split("/")[-2]  # Coluna F
                     st.session_state.pdf = baixar_pdf(st.session_state.file_id)
                 else:
                     st.error("Senha incorreta")
