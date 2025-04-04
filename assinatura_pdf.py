@@ -32,7 +32,7 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     c = canvas.Canvas(packet, pagesize=letter)
     largura, altura = letter
 
-    c.setFont("Roboto", 10)
+    c.setFont("Helvetica", 10)
     c.drawString(100, 250, "Assinatura do colaborador:")
     c.drawImage(assinatura_sem_fundo, 100, 180, width=200, height=50)
 
