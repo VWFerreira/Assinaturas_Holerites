@@ -46,7 +46,7 @@ except ValueError as e:
     st.stop()
 
 SPREADSHEET_ID = '1Um6fj1K9n-Ks8_qOEeT4tiu8xqTAX5hU751bvtRjEFk'
-RANGE_NAME = 'A1:H'  # Inclui a coluna de senha
+RANGE_NAME = 'A1:K'  # Inclui a coluna de senha
 
 # Inicializa as APIs do Google Sheets e Google Drive
 sheets_service = build('sheets', 'v4', credentials=creds)
@@ -193,11 +193,11 @@ df = st.session_state.df
 
 def autenticar_usuario():
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
-    senha_armazenada = dados_funcionario.iloc[7]  # Coluna H com a senha armazenada
+    senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
     
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
-        st.session_state.link_holerite = dados_funcionario.iloc[4]  # Coluna E com o link do holerite
+        st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna E com o link do holerite
         st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]  # Extrai o file_id do link
         st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
     else:
