@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader, PdfWriter
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import letter
 from datetime import datetime
+import pytz
 import io
 from PIL import Image
 
@@ -31,14 +32,14 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     c = canvas.Canvas(packet, pagesize=letter)
     largura, altura = letter
 
+    c.setFont("Roboto", 10)
     c.drawString(100, 250, "Assinatura do colaborador:")
     c.drawImage(assinatura_sem_fundo, 100, 180, width=200, height=50)
 
-    now = datetime.now()
+    now = datetime.now(pytz.timezone("America/Sao_Paulo"))
     data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
+    c.setFont("Helvetica", 9)
     c.drawString(100, 140, f"Data e hora: {data_hora}")
-
-    # ➕ Inserir CPF abaixo da data
     c.drawString(100, 120, f"CPF: {cpf}")
 
     c.save()
@@ -55,6 +56,7 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     pdf_writer.write(output)
     output.seek(0)
     return output
+
 
 
 
