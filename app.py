@@ -158,105 +158,25 @@ try:
 
     if mensagem_k2:
         st.markdown(f"""
-        <div style='background-color: #FF0000; padding: 10px; border-radius: 5px; border: 0px solid #c3e6cb; margin-bottom: 15px;'>
-            <strong>🔔 Informação:</strong> {mensagem_k2}
+        <div style='background-color: #d4edda; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb; margin-bottom: 15px;'>
+            <strong>📢 Informação:</strong> {mensagem_k2}
         </div>
         """, unsafe_allow_html=True)
 except Exception as e:
     st.warning(f"Erro ao buscar mensagem de aviso: {str(e)}")
 
-# Aplicar CSS para melhorar a aparência
-st.markdown("""
-<style>
-    .main {
-        padding: 1rem;
-    }
-    .stButton>button {
-        width: 100%;
-        border-radius: 5px;
-    }
-    .footer {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        text-align: center;
-        padding: 10px;
-        background-color: white;
-    }
-</style>
-""", unsafe_allow_html=True)
+# Exibir link do holerite se disponível
+if st.session_state.link_holerite and 'drive.google.com' in st.session_state.link_holerite:
+    st.markdown(f"""
+    <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
+        <h4>📄 Seu holerite está disponível</h4>
+        <p>🔗 <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
+    </div>
+    """, unsafe_allow_html=True)
+else:
+    st.warning("⚠️ O link do holerite não está disponível ou é inválido. Aguarde o envio pelo RH.")
 
-if 'df' not in st.session_state:
-    st.session_state.df = ler_dados_da_planilha()
-
-if 'autenticado' not in st.session_state:
-    st.session_state.autenticado = False
-
-if 'funcionario_selecionado' not in st.session_state:
-    st.session_state.funcionario_selecionado = None
-
-if 'link_holerite' not in st.session_state:
-    st.session_state.link_holerite = None
-
-if 'file_id' not in st.session_state:
-    st.session_state.file_id = None
-
-if 'pdf_file' not in st.session_state:
-    st.session_state.pdf_file = None
-
-if 'senha' not in st.session_state:
-    st.session_state.senha = None
-
-
-df = st.session_state.df
-
-def autenticar_usuario():
-    if st.session_state.funcionario_selecionado not in df['NOME'].values:
-        st.error("Funcionário não encontrado na planilha. Verifique o nome selecionado.")
-        return
-
-    dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
-    senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha
-
-    if verificar_senha(st.session_state.senha, senha_armazenada):
-        st.session_state.autenticado = True
-        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Nome
-
-        st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F
-        if not st.session_state.link_holerite or 'drive.google.com' not in st.session_state.link_holerite:
-            st.warning("⚠️ Aguarde! Ainda não há holerite disponível para você.")
-            return
-
-        st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]
-        st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
-    else:
-        st.session_state.autenticado = False
-        st.error('Senha incorreta.')
-
-
-with st.container():
-    if not st.session_state.autenticado:
-        if df is not None:
-            with st.form(key='login_form'):
-                st.session_state.funcionario_selecionado = st.selectbox(' Selecione seu nome:', df['NOME'].tolist())
-                st.session_state.senha = st.text_input('🔒 Digite sua senha:', type='password')
-                if st.form_submit_button('Entrar'):
-                    autenticar_usuario()
-        else:
-            st.warning('⚠️ Não foram encontrados dados na planilha.')
-
-    else:
-        st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
-
-        st.markdown(f"""
-        <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
-            <h4>📄 Seu holerite está disponível</h4>
-            <p>🔗 <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
-        </div>
-        """, unsafe_allow_html=True)
-
-        st.subheader('✒️ Assine aqui:')
+        st.subheader('🖊️ Assine aqui:')
         st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
 
         canvas_result = st_canvas(
@@ -307,8 +227,8 @@ with st.container():
 st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.9em; margin-top: 10px;'>
-    Desenvolvido por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
-    <a href='mailto:appgenesis@gmail.com' style='color: #888;'>appgenesis@gmail.com</a>
+    Desenvolvido com 💻 por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
+    <a href='mailto:suporte@genpac.com.br' style='color: #888;'>suporte@genpac.com.br</a>
 </div>
 """, unsafe_allow_html=True)
 
