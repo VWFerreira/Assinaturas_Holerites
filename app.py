@@ -127,7 +127,7 @@ except Exception as e:
     st.warning(f"Não foi possível carregar a instrução (K2): {str(e)}")
 
 st.markdown("""
-<div style="background-color: #4682B4; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
+<div style="background-color: #8B0000; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
     <h4> 🛈 Instruções:</h4>
     <ul>
         <li>🧑‍💼 Selecione seu nome na lista.</li>
