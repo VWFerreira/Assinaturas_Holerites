@@ -145,22 +145,6 @@ def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
 def verificar_senha(senha_digitada, senha_armazenada):
     return senha_digitada == senha_armazenada
 
-# AVISO GERAL DO RH
-if 'aviso_geral' not in st.session_state:
-    st.session_state.aviso_geral = "📢 Atenção! Os holerites estarão disponíveis até o dia 10 de cada mês. Qualquer dúvida, entre em contato com o RH."
-
-if 'funcionario_selecionado' in st.session_state and 'senha' in st.session_state:
-    if st.session_state.funcionario_selecionado == "DEPARTAMENTO PESSOAL" and st.session_state.senha == "15789":
-    novo_aviso = st.text_area("📝 Editar Aviso Geral", st.session_state.aviso_geral)
-    if st.button("💾 Salvar Aviso"):
-        st.session_state.aviso_geral = novo_aviso
-        st.success("Aviso atualizado com sucesso!")
-
-st.markdown(f"""
-<div style='background-color:#fff3cd;padding:10px;border-radius:5px;border:1px solid #ffeeba;margin-bottom:15px;'>
-    <strong>📢 Aviso:</strong> {st.session_state.aviso_geral}
-</div>
-""", unsafe_allow_html=True)
 
 # Interface Streamlit
 st.markdown("<h1 style='text-align: center;'>Assinatura de Holerites</h1>", unsafe_allow_html=True)
@@ -187,7 +171,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# Inicializa o estado da sessão
 if 'df' not in st.session_state:
     st.session_state.df = ler_dados_da_planilha()
 
@@ -206,6 +189,10 @@ if 'file_id' not in st.session_state:
 if 'pdf_file' not in st.session_state:
     st.session_state.pdf_file = None
 
+if 'senha' not in st.session_state:
+    st.session_state.senha = None
+
+
 df = st.session_state.df
 
 def autenticar_usuario():
@@ -214,15 +201,15 @@ def autenticar_usuario():
         return
 
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
-    senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
+    senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha
 
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
-        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Nome na coluna A
+        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Nome
 
-        st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F com o link do holerite
+        st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F
         if not st.session_state.link_holerite or 'drive.google.com' not in st.session_state.link_holerite:
-            st.warning("Aguarde! Ainda não há holerite disponível para você.")
+            st.warning("⚠️ Aguarde! Ainda não há holerite disponível para você.")
             return
 
         st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]
@@ -231,50 +218,31 @@ def autenticar_usuario():
         st.session_state.autenticado = False
         st.error('Senha incorreta.')
 
-# Container para centralizar o conteúdo
+
 with st.container():
-    # Página de login se não estiver autenticado
     if not st.session_state.autenticado:
         if df is not None:
-            # Criando um formulário para melhorar a experiência de login
             with st.form(key='login_form'):
-                st.session_state.funcionario_selecionado = st.selectbox('Selecione seu nome:', df['NOME'].tolist())
-                st.session_state.senha = st.text_input('Digite sua senha:', type='password')
-                
-                submit_button = st.form_submit_button(label='Entrar')
-                if submit_button:
+                st.session_state.funcionario_selecionado = st.selectbox('👤 Selecione seu nome:', df['NOME'].tolist())
+                st.session_state.senha = st.text_input('🔒 Digite sua senha:', type='password')
+                if st.form_submit_button('Entrar'):
                     autenticar_usuario()
         else:
-            st.warning('Não foram encontrados dados na planilha.')
+            st.warning('⚠️ Não foram encontrados dados na planilha.')
 
-    # Página após autenticação
     else:
         st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
 
-        # Campo para observação
-        observacao = st.text_area("Observações (opcional):", placeholder="Digite aqui alguma observação que queira deixar registrada...")
-        if observacao:
-            st.session_state.observacao = observacao
-
-        # Exibir informações do holerite em um card
         st.markdown(f"""
         <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
-            <h4>Seu holerite está disponível</h4>
-            <p>Link: <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
+            <h4>📄 Seu holerite está disponível</h4>
+            <p>🔗 <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
         </div>
         """, unsafe_allow_html=True)
 
-        st.subheader('Assine aqui:')  # Área para assinatura
-        
-        # Criar o canvas para assinatura com instruções
-        st.markdown("""
-        <p style="color: #666; font-size: 0.9em;">
-            Use o mouse ou toque para desenhar sua assinatura no campo abaixo. 
-            Certifique-se de que a assinatura esteja clara e completa.
-        </p>
-        """, unsafe_allow_html=True)
-        
-        # Criar o canvas para assinatura
+        st.subheader('🖊️ Assine aqui:')
+        st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
+
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",  
             stroke_width=2,
@@ -283,19 +251,16 @@ with st.container():
             height=150,
             width=300,
             drawing_mode="freedraw",
-            key="canvas",
+            key="canvas"
         )
 
-        # Salvar a assinatura desenhada
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
 
-        # NOVO BOTÃO ADICIONADO ABAIXO DO CANVAS
         if canvas_result.image_data is not None and st.button('✍️ Assinar e Enviar Holerite', use_container_width=True):
             with st.spinner('Processando assinatura...'):
                 try:
                     assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
-
                     with tempfile.NamedTemporaryFile(delete=False, suffix='.pdf') as temp_pdf_file:
                         temp_pdf_file.write(st.session_state.pdf_file.read())
                         temp_pdf_path = temp_pdf_file.name
@@ -306,31 +271,29 @@ with st.container():
 
                     if file_id_assinado and web_link:
                         if atualizar_link_na_planilha(st.session_state.funcionario_selecionado, web_link):
-                            st.success(f"Holerite assinado com sucesso e link atualizado na planilha!")
-                            st.markdown(f"""
-                            <div style="padding: 15px; border-radius: 5px; border: 1px solid #d4edda; background-color: #d4edda; margin: 10px 0;">
-                                <h4 style="color: #155724;">Documento assinado com sucesso!</h4>
-                                <p style="margin: 5px 0;"><a href="{web_link}" target="_blank">Abrir documento assinado</a></p>
-                            </div>
-                            """, unsafe_allow_html=True)
+                            st.success("✅ Holerite assinado com sucesso e link atualizado!")
+                            st.markdown(f"<a href='{web_link}' target='_blank'>📎 Abrir holerite assinado</a>", unsafe_allow_html=True)
                         else:
-                            st.warning("Holerite assinado com sucesso, mas não foi possível atualizar o link na planilha.")
-                            st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
+                            st.warning("Holerite assinado, mas não foi possível atualizar a planilha.")
                     else:
-                        st.error("Não foi possível salvar o arquivo assinado.")
+                        st.error("Erro ao salvar o arquivo assinado.")
 
-                    try:
-                        os.unlink(assinatura_temp_file_path)
-                        os.unlink(temp_pdf_path)
-                    except:
-                        pass
+                    os.unlink(assinatura_temp_file_path)
+                    os.unlink(temp_pdf_path)
+
                 except Exception as e:
-                    st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
+                    st.error(f"Erro ao processar a assinatura: {str(e)}")
 
-        if st.button('Sair'):
+        if st.button('🚪 Sair'):
             st.session_state.clear()
             st.experimental_rerun()
 
-# Rodapé - Colocado no final, fora dos blocos condicionais
-st.markdown("<hr>", unsafe_allow_html=True)
-st.markdown("<p style='text-align: center; color: gray;'>By GENPAC 2025</p>", unsafe_allow_html=True)
+st.markdown("""
+<hr>
+<div style='text-align: center; color: gray; font-size: 0.9em; margin-top: 10px;'>
+    Desenvolvido com 💻 por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
+    <a href='mailto:suporte@genpac.com.br' style='color: #888;'>suporte@genpac.com.br</a>
+</div>
+""", unsafe_allow_html=True)
+
+
