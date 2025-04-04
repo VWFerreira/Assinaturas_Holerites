@@ -193,7 +193,7 @@ df = st.session_state.df
 
 def autenticar_usuario():
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
-    senha_armazenada = dados_funcionario.iloc[7]  # Coluna H com a senha armazenada
+    senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
     
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
