@@ -78,7 +78,7 @@ def atualizar_link_na_planilha(nome_funcionario, link_assinado):
                 break
         
         if linha:
-            range_to_update = f'G{linha}'
+            range_to_update = f'H{linha}'
             valores_para_atualizar = [[link_assinado]]
             body = {'values': valores_para_atualizar}
             
@@ -192,11 +192,15 @@ if 'pdf_file' not in st.session_state:
 df = st.session_state.df
 
 def autenticar_usuario():
+    if st.session_state.funcionario_selecionado not in df['NOME'].values:
+        st.error("Funcionário não encontrado na planilha. Verifique o nome selecionado.")
+        return
     dados_funcionario = df[df['NOME'] == st.session_state.funcionario_selecionado].iloc[0]
     senha_armazenada = dados_funcionario.iloc[8]  # Coluna I com a senha armazenada
-    
+
     if verificar_senha(st.session_state.senha, senha_armazenada):
         st.session_state.autenticado = True
+        st.session_state.funcionario_selecionado = dados_funcionario.iloc[0]  # Garante que o nome fique salvo corretamente
         st.session_state.link_holerite = dados_funcionario.iloc[5]  # Coluna F com o link do holerite
         st.session_state.file_id = st.session_state.link_holerite.split('/')[-2]  # Extrai o file_id do link
         st.session_state.pdf_file = baixar_pdf(st.session_state.file_id)
@@ -302,4 +306,5 @@ with st.container():
 # Rodapé - Colocado no final, fora dos blocos condicionais
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: gray;'>By GENPAC 2025</p>", unsafe_allow_html=True)
+
 
