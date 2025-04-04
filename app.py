@@ -149,6 +149,22 @@ def verificar_senha(senha_digitada, senha_armazenada):
 # Interface Streamlit
 st.markdown("<h1 style='text-align: center;'>Assinatura de Holerites</h1>", unsafe_allow_html=True)
 
+# Exibir mensagem da célula K2
+try:
+    mensagem_k2 = sheets_service.spreadsheets().values().get(
+        spreadsheetId=SPREADSHEET_ID,
+        range='K2'
+    ).execute().get('values', [[""]])[0][0]
+
+    if mensagem_k2:
+        st.markdown(f"""
+        <div style='background-color: #d4edda; padding: 10px; border-radius: 5px; border: 1px solid #c3e6cb; margin-bottom: 15px;'>
+            <strong>📢 Informação:</strong> {mensagem_k2}
+        </div>
+        """, unsafe_allow_html=True)
+except Exception as e:
+    st.warning(f"Erro ao buscar mensagem de aviso: {str(e)}")
+
 # Aplicar CSS para melhorar a aparência
 st.markdown("""
 <style>
@@ -291,8 +307,8 @@ with st.container():
 st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.9em; margin-top: 10px;'>
-    Desenvolvido por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
-    <a href='mailto:appgennesis@gmail.com' style='color: #888;'>appgennesis@gmail.com</a>
+    Desenvolvido com 💻 por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
+    <a href='mailto:appgenesis@gmail.com' style='color: #888;'>appgenesis@gmail.com</a>
 </div>
 """, unsafe_allow_html=True)
 
