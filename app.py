@@ -128,7 +128,7 @@ except Exception as e:
 
 st.markdown("""
 <div style="background-color: #4682B4; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-    <h4>📌 Instruções:</h4>
+    <h4> 🛈 Instruções:</h4>
     <ul>
         <li>🧑‍💼 Selecione seu nome na lista.</li>
         <li>🔐 Digite sua senha corretamente.</li>
