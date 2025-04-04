@@ -6,12 +6,17 @@ import io
 from PIL import Image
 
 def remover_fundo(assinatura_path):
-    img = Image.open(assinatura_path).convert("RGBA")
+    img = Image.open(assinatura_path)
+    img = img.convert("RGBA")
     datas = img.getdata()
-    new_data = [
-        (255, 255, 255, 0) if item[0] > 200 and item[1] > 200 and item[2] > 200 else item
-        for item in datas
-    ]
+
+    new_data = []
+    for item in datas:
+        if item[0] > 200 and item[1] > 200 and item[2] > 200:
+            new_data.append((255, 255, 255, 0))
+        else:
+            new_data.append(item)
+
     img.putdata(new_data)
     assinatura_sem_fundo_path = "assinatura_sem_fundo.png"
     img.save(assinatura_sem_fundo_path, "PNG")
@@ -32,6 +37,8 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     now = datetime.now()
     data_hora = now.strftime("%d/%m/%Y %H:%M:%S")
     c.drawString(100, 140, f"Data e hora: {data_hora}")
+
+    # ➕ Inserir CPF abaixo da data
     c.drawString(100, 120, f"CPF: {cpf}")
 
     c.save()
@@ -48,6 +55,7 @@ def assinar_pdf(pdf_path, assinatura_path, cpf):
     pdf_writer.write(output)
     output.seek(0)
     return output
+
 
 
 
