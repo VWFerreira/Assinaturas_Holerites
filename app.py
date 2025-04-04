@@ -11,7 +11,7 @@ from streamlit_drawable_canvas import st_canvas
 import json
 import os
 
-st.set_page_config(page_title="Assinatura de Holerites", page_icon="\ud83d\udcc4")
+st.set_page_config(page_title="Assinatura de Holerites", page_icon="logo.png")
 
 try:
     logo_path = "logo.png"
@@ -19,7 +19,7 @@ try:
     with col2:
         st.image(logo_path, width=200)
 except Exception as e:
-    st.warning(f"N\u00e3o foi poss\u00edvel carregar o logo: {str(e)}")
+    st.warning(f"Não foi possível carregar o logo: {str(e)}")
 
 credentials_content = st.secrets["google"]["credentials_file"]
 
@@ -70,7 +70,7 @@ def atualizar_link_na_planilha(nome_funcionario, link_assinado):
             ).execute()
             return True
         else:
-            st.error(f"N\u00e3o foi poss\u00edvel encontrar a linha para o funcion\u00e1rio {nome_funcionario}")
+            st.error(f"Não foi possível encontrar a linha para o funcionário {nome_funcionario}")
             return False
     except Exception as e:
         st.error(f"Erro ao atualizar a planilha: {str(e)}")
@@ -116,26 +116,24 @@ def enviar_pdf_assinado(pdf_assinado, nome_arquivo):
 def verificar_senha(senha_digitada, senha_armazenada):
     return senha_digitada == senha_armazenada
 
-st.markdown("""
-<h1 style='text-align: center;'>\ud83d\udcc4 Assinatura de Holerites</h1>
-""", unsafe_allow_html=True)
+st.markdown("<h1 style='text-align: center;'>📄 Assinatura de Holerites</h1>", unsafe_allow_html=True)
 
 try:
     instrucao_cell = sheets_service.spreadsheets().values().get(spreadsheetId=SPREADSHEET_ID, range='K2').execute()
     instrucao_texto = instrucao_cell.get('values', [['']])[0][0]
     if instrucao_texto:
-        st.info(f"\u2139\ufe0f {instrucao_texto}")
+        st.info(f"ℹ️ {instrucao_texto}")
 except Exception as e:
-    st.warning(f"N\u00e3o foi poss\u00edvel carregar a instru\u00e7\u00e3o (K2): {str(e)}")
+    st.warning(f"Não foi possível carregar a instrução (K2): {str(e)}")
 
 st.markdown("""
 <div style="background-color: #f0f4f8; padding: 15px; border-radius: 10px; margin-bottom: 20px;">
-    <h4>\ud83d\udccc Instru\u00e7\u00f5es:</h4>
+    <h4>📌 Instruções:</h4>
     <ul>
-        <li>\ud83e\uddd1\u200d\ud83d\udcbc Selecione seu nome na lista.</li>
-        <li>\ud83d\udd10 Digite sua senha corretamente.</li>
-        <li>\ud83d\udd8a\ufe0f Desenhe sua assinatura com clareza.</li>
-        <li>\u2705 Clique em <strong>\"Assinar PDF\"</strong> para finalizar.</li>
+        <li>🧑‍💼 Selecione seu nome na lista.</li>
+        <li>🔐 Digite sua senha corretamente.</li>
+        <li>🖊️ Desenhe sua assinatura com clareza.</li>
+        <li>✅ Clique em <strong>\"Assinar PDF\"</strong> para finalizar.</li>
     </ul>
 </div>
 """, unsafe_allow_html=True)
@@ -171,18 +169,18 @@ with st.container():
     if not st.session_state.autenticado:
         if df is not None:
             with st.form(key='login_form'):
-                st.session_state.funcionario_selecionado = st.selectbox('\ud83e\uddd1 Selecione seu nome:', df['NOME'].tolist())
-                st.session_state.senha = st.text_input('\ud83d\udd10 Digite sua senha:', type='password')
-                submit_button = st.form_submit_button(label='\ud83d\udd13 Entrar')
+                st.session_state.funcionario_selecionado = st.selectbox('🧑 Selecione seu nome:', df['NOME'].tolist())
+                st.session_state.senha = st.text_input('🔒 Digite sua senha:', type='password')
+                submit_button = st.form_submit_button(label='🔓 Entrar')
                 if submit_button:
                     autenticar_usuario()
         else:
-            st.warning('N\u00e3o foram encontrados dados na planilha.')
+            st.warning('Não foram encontrados dados na planilha.')
     else:
         st.success(f"Bem-vindo(a), {st.session_state.funcionario_selecionado}!")
         st.markdown(f"""
         <div style="padding: 10px; border-radius: 5px; border: 1px solid #e6e6e6; margin-bottom: 10px;">
-            <h4>Seu holerite est\u00e1 dispon\u00edvel</h4>
+            <h4>Seu holerite está disponível</h4>
             <p>Link: <a href="{st.session_state.link_holerite}" target="_blank">Visualizar holerite original</a></p>
         </div>
         """, unsafe_allow_html=True)
@@ -205,7 +203,7 @@ with st.container():
         )
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
-        if canvas_result.image_data is not None and st.button('\ud83d\udd8a\ufe0f Assinar PDF'):
+        if canvas_result.image_data is not None and st.button('🖊️ Assinar PDF'):
             with st.spinner('Processando assinatura...'):
                 try:
                     assinatura_temp_file_path = salvar_assinatura_em_temp_file(st.session_state.signature)
@@ -225,10 +223,10 @@ with st.container():
                             </div>
                             """, unsafe_allow_html=True)
                         else:
-                            st.warning("Holerite assinado com sucesso, mas n\u00e3o foi poss\u00edvel atualizar o link na planilha.")
-                            st.markdown(f"**Link para visualiza\u00e7\u00e3o:** [Abrir documento]({web_link})")
+                            st.warning("Holerite assinado com sucesso, mas não foi possível atualizar o link na planilha.")
+                            st.markdown(f"**Link para visualização:** [Abrir documento]({web_link})")
                     else:
-                        st.error("N\u00e3o foi poss\u00edvel salvar o arquivo assinado.")
+                        st.error("Não foi possível salvar o arquivo assinado.")
                     try:
                         os.unlink(assinatura_temp_file_path)
                         os.unlink(temp_pdf_path)
@@ -236,14 +234,14 @@ with st.container():
                         pass
                 except Exception as e:
                     st.error(f"Ocorreu um erro durante o processo de assinatura: {str(e)}")
-        if st.button('\ud83d\udeaa Sair'):
+        if st.button('🚪 Sair'):
             st.session_state.clear()
             st.experimental_rerun()
 
 st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.85em;'>
-    <p><strong>GENPAC</strong> © 2025 | Todos os direitos reservados.</p>
-    <p>Desenvolvido para uso interno - Gestão de Projetos</p>
+    <p><strong>GENPAC Sistemas</strong> © 2025 | Todos os direitos reservados.</p>
+    <p>Desenvolvido para uso interno - Gestão Pública e Transparência</p>
 </div>
 """, unsafe_allow_html=True)
