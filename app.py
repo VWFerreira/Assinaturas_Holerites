@@ -149,7 +149,8 @@ def verificar_senha(senha_digitada, senha_armazenada):
 if 'aviso_geral' not in st.session_state:
     st.session_state.aviso_geral = "📢 Atenção! Os holerites estarão disponíveis até o dia 10 de cada mês. Qualquer dúvida, entre em contato com o RH."
 
-if st.session_state.funcionario_selecionado == "DEPARTAMENTO PESSOAL" and st.session_state.senha == "15789":
+if 'funcionario_selecionado' in st.session_state and 'senha' in st.session_state:
+    if st.session_state.funcionario_selecionado == "DEPARTAMENTO PESSOAL" and st.session_state.senha == "15789":
     novo_aviso = st.text_area("📝 Editar Aviso Geral", st.session_state.aviso_geral)
     if st.button("💾 Salvar Aviso"):
         st.session_state.aviso_geral = novo_aviso
@@ -157,7 +158,7 @@ if st.session_state.funcionario_selecionado == "DEPARTAMENTO PESSOAL" and st.ses
 
 st.markdown(f"""
 <div style='background-color:#fff3cd;padding:10px;border-radius:5px;border:1px solid #ffeeba;margin-bottom:15px;'>
-    <strong>📢 Aviso:</strong> {aviso_geral}
+    <strong>📢 Aviso:</strong> {st.session_state.aviso_geral}
 </div>
 """, unsafe_allow_html=True)
 
@@ -333,6 +334,3 @@ with st.container():
 # Rodapé - Colocado no final, fora dos blocos condicionais
 st.markdown("<hr>", unsafe_allow_html=True)
 st.markdown("<p style='text-align: center; color: gray;'>By GENPAC 2025</p>", unsafe_allow_html=True)
-
-
-
