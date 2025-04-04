@@ -176,8 +176,8 @@ if st.session_state.link_holerite and 'drive.google.com' in st.session_state.lin
 else:
     st.warning("⚠️ O link do holerite não está disponível ou é inválido. Aguarde o envio pelo RH.")
 
-        st.subheader('🖊️ Assine aqui:')
-        st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
+    st.subheader('🖊️ Assine aqui:')
+    st.markdown("<p style='color: #666;'>Use o mouse ou toque para desenhar sua assinatura abaixo.</p>", unsafe_allow_html=True)
 
         canvas_result = st_canvas(
             fill_color="rgba(255, 165, 0, 0.3)",  
