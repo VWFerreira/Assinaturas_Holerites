@@ -292,7 +292,7 @@ st.markdown("""
 <hr>
 <div style='text-align: center; color: gray; font-size: 0.9em; margin-top: 10px;'>
     Desenvolvido por <strong>GENPAC</strong> • Sistema de Assinatura de Holerites • © 2025<br>
-    <a href='mailto:appgennesis@gmail.com' style='color: #888;'></a>
+    <a href='mailto:appgennesis@gmail.com' style='color: #888;'>appgennesis@gmail.com</a>
 </div>
 """, unsafe_allow_html=True)
 
