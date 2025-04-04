@@ -257,14 +257,7 @@ with st.container():
         # Salvar a assinatura desenhada
         if canvas_result.image_data is not None:
             st.session_state.signature = canvas_result.image_data
-
-        # Adiciona botões para limpar e assinar em colunas
-        col1, col2 = st.columns(2)
-        with col1:
-            if st.button('Limpar Assinatura'):
-                # Isso fará com que o canvas seja recriado na próxima renderização
-                st.experimental_rerun()
-                
+       
         with col2:
             # Se já existe uma assinatura, exiba o botão para assinar o PDF
             if canvas_result.image_data is not None and st.button('Assinar PDF'):
